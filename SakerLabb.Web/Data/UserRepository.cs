@@ -94,10 +94,17 @@ public class UserRepository
 
     public void Delete(string userId)
     {
-        using var connection = _db.Open();
-        var command = connection.CreateCommand();
-        command.CommandText = "DELETE FROM Users WHERE Id = " + userId;
-        command.ExecuteNonQuery();
+            using var connection = _db.Open();
+            var command = connection.CreateCommand();
+            
+            command.CommandText = "DELETE FROM Users WHERE Id = @Id";
+            
+            var parameter = command.CreateParameter();
+            parameter.ParameterName = "@Id";
+            parameter.Value = userId;
+            command.Parameters.Add(parameter);
+            
+            command.ExecuteNonQuery();
     }
 
     private static List<User> Read(SqliteCommand command)
